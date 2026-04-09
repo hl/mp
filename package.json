@@ -5,6 +5,6 @@
   "type": "module",
   "scripts": {
     "build:registry": "node scripts/build-registry.js",
-    "validate": "node scripts/build-registry.js && cat registry.json"
+    "validate": "node scripts/build-registry.js && cat .claude-plugin/marketplace.json"
   }
 }
