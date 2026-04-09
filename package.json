@@ -1,0 +1,10 @@
+{
+  "name": "hl-mp",
+  "version": "1.0.0",
+  "description": "Plugins for Claude Code",
+  "type": "module",
+  "scripts": {
+    "build:registry": "node scripts/build-registry.js",
+    "validate": "node scripts/build-registry.js && cat registry.json"
+  }
+}

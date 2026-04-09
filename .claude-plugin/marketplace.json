@@ -1,0 +1,28 @@
+{
+  "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
+  "name": "hl-mp",
+  "description": "Plugins for Claude Code",
+  "owner": {
+    "name": "hl"
+  },
+  "plugins": [
+    {
+      "name": "oi",
+      "source": "./plugins/skills/oi",
+      "description": "Inter-session messaging for Claude Code — send and receive messages between independent sessions",
+      "version": "1.0.0",
+      "author": {
+        "name": "hl"
+      }
+    },
+    {
+      "name": "spec",
+      "source": "./plugins/skills/spec",
+      "description": "Spec-driven development: collaboratively write testable specifications, review them for gaps and contradictions, then implement them with tests-first incremental builds.",
+      "version": "1.1.0",
+      "author": {
+        "name": "hl"
+      }
+    }
+  ]
+}

@@ -1,0 +1,8 @@
+{
+  "name": "oi",
+  "description": "Inter-session messaging for Claude Code — send and receive messages between independent sessions",
+  "version": "1.0.0",
+  "author": {
+    "name": "hl"
+  }
+}
