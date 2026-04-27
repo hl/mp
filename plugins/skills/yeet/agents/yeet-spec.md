@@ -1,5 +1,5 @@
 ---
-name: spec
+name: yeet-spec
 description: >
   Produces a spec in docs/specs/ or determines that no spec is needed. Conducts a structured
   brainstorm if the brief is fuzzy. Skips if the work does not warrant a spec.
@@ -20,15 +20,15 @@ description: >
   <example>
   Context: User provides a clear feature brief.
   user: "/yeet:spec add a CSV export for the invoices admin view, admins only, max 100k rows"
-  assistant: "[loads spec-template skill, writes docs/specs/csv-export-invoices.md with status: draft]"
+  assistant: "[loads yeet-spec-template skill, writes docs/specs/csv-export-invoices.md with status: draft]"
   <commentary>Brief is clear enough to spec directly; no brainstorm needed.</commentary>
   </example>
 
   <example>
   Context: User has a fuzzy idea.
   user: "/yeet:spec I want to do something about how slow the dashboard feels"
-  assistant: "[loads brainstorm-approach skill, asks: What is the problem being solved — what specifically feels slow, and what is the user trying to do when they hit it?]"
-  <commentary>Fuzzy brief; agent loads brainstorm-approach and asks the first question only.</commentary>
+  assistant: "[loads yeet-brainstorm-approach skill, asks: What is the problem being solved — what specifically feels slow, and what is the user trying to do when they hit it?]"
+  <commentary>Fuzzy brief; agent loads yeet-brainstorm-approach and asks the first question only.</commentary>
   </example>
 
 model: opus
@@ -69,10 +69,10 @@ The brief is clear when you can answer all of these from what the user has said:
 
 If yes to all five, proceed directly:
 
-1. Load the `spec-template` skill by running this Bash command, then read its output as the
-   skill content:
+1. Load the `yeet-spec-template` skill by running this Bash command, then read its output
+   as the skill content:
    ```bash
-   cat "${CLAUDE_PLUGIN_ROOT}/skills/spec-template/SKILL.md"
+   cat "${CLAUDE_PLUGIN_ROOT}/skills/yeet-spec-template/SKILL.md"
    ```
 2. Write the spec to `docs/specs/<kebab-case-feature-name>.md`. Create `docs/specs/` if it
    does not exist (`mkdir -p docs/specs` via Bash).
@@ -85,17 +85,17 @@ If yes to all five, proceed directly:
 
 If you cannot answer all five questions from the brief, the brief is fuzzy. Do not guess.
 
-1. Load the `brainstorm-approach` skill via Bash:
+1. Load the `yeet-brainstorm-approach` skill via Bash:
    ```bash
-   cat "${CLAUDE_PLUGIN_ROOT}/skills/brainstorm-approach/SKILL.md"
+   cat "${CLAUDE_PLUGIN_ROOT}/skills/yeet-brainstorm-approach/SKILL.md"
    ```
 2. Conduct the discovery conversation following the question order and rules in that skill.
-3. Once the threshold for "enough information" is met, load the `spec-template` skill (same
-   pattern, different path) and write the spec as in Path A.
+3. Once the threshold for "enough information" is met, load the `yeet-spec-template` skill
+   (same pattern, different path) and write the spec as in Path A.
 
 Do not write the spec while the brainstorm is incomplete. If the user wants to skip ahead,
-record the unresolved items in the spec's `open questions` section so `spec-review` can
-flag them.
+record the unresolved items in the spec's `open questions` section so `yeet-spec-review`
+can flag them.
 
 ---
 

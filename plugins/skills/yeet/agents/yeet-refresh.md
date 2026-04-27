@@ -1,5 +1,5 @@
 ---
-name: refresh
+name: yeet-refresh
 description: >
   Reviews stale entries in docs/solutions/ and proposes targeted updates. Checks docs
   against the current codebase: missing file references, superseded patterns, conventions

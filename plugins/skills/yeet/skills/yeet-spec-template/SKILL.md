@@ -1,13 +1,13 @@
 ---
-name: spec-template
+name: yeet-spec-template
 description: Canonical spec format for agent-driven development. Load when writing or reading a spec.
 ---
 
 # Spec Template
 
 Defines the canonical spec format used across the yeet workflow. Every spec produced by the
-`spec` agent uses this structure. Every spec read by `spec-review`, `review`, and `compound`
-relies on it.
+`yeet-spec` agent uses this structure. Every spec read by `yeet-spec-review`, `yeet-review`,
+and `yeet-compound` relies on it.
 
 The reader of every spec is an LLM agent. Precision over readability.
 
@@ -39,20 +39,20 @@ The feature name. Matches the slug, expanded for human reading.
 
 One of:
 - `draft` — written, not yet validated
-- `ready` — passed `spec-review`, ready for implementation
+- `ready` — passed `yeet-spec-review`, ready for implementation
 - `in-progress` — implementation underway
-- `done` — all acceptance criteria satisfied; `compound` has been run
+- `done` — all acceptance criteria satisfied; `yeet-compound` has been run
 
 Lifecycle setters:
-- `spec` sets this to `draft` on creation.
-- `spec-review` advances `draft → ready` when checks pass.
-- `review` advances `ready → in-progress` on its first run, signalling that implementation
-  has started.
-- `compound` advances `in-progress → done` (or `ready → done` if `compound` runs without a
-  prior `review`).
+- `yeet-spec` sets this to `draft` on creation.
+- `yeet-spec-review` advances `draft → ready` when checks pass.
+- `yeet-review` advances `ready → in-progress` on its first run, signalling that
+  implementation has started.
+- `yeet-compound` advances `in-progress → done` (or `ready → done` if `yeet-compound` runs
+  without a prior `yeet-review`).
 
-`in-progress` is also how `review` and `compound` find the active spec when the branch name
-does not match a spec slug.
+`in-progress` is also how `yeet-review` and `yeet-compound` find the active spec when the
+branch name does not match a spec slug.
 
 ### `context`
 
@@ -105,8 +105,8 @@ Anything unresolved that could force an assumption during implementation.
 
 If empty, write: "Open questions: none."
 
-`spec-review` will not promote the spec to `ready` while open questions remain unless the
-user explicitly overrides.
+`yeet-spec-review` will not promote the spec to `ready` while open questions remain unless
+the user explicitly overrides.
 
 ---
 

@@ -1,5 +1,5 @@
 ---
-name: review
+name: yeet-review
 description: >
   Checks whether the current implementation satisfies the spec. Produces findings that feed
   back into /plan. Does not suggest implementation approaches.
@@ -61,7 +61,7 @@ Otherwise, auto-detect:
    spec applies. Do not guess.
 
 If the spec's status is `draft`, warn the user that it has not been validated by
-`spec-review`. Implementation against an unvalidated spec is more likely to drift.
+`yeet-spec-review`. Implementation against an unvalidated spec is more likely to drift.
 
 ---
 

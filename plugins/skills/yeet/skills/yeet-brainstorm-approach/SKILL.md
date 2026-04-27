@@ -1,13 +1,13 @@
 ---
-name: brainstorm-approach
+name: yeet-brainstorm-approach
 description: Question cadence for structured discovery. Load when a brief is ambiguous and a spec needs to be written.
 ---
 
 # Brainstorm Approach
 
-Used by the `spec` agent when the brief is fuzzy and a spec cannot be written without more
-context. Defines the question order, the conversation rules, and the threshold for "enough
-information to write a spec."
+Used by the `yeet-spec` agent when the brief is fuzzy and a spec cannot be written without
+more context. Defines the question order, the conversation rules, and the threshold for
+"enough information to write a spec."
 
 Without this, discovery degrades in predictable ways: too many questions at once, questions
 about the solution before the problem is understood, or moving to spec writing while open

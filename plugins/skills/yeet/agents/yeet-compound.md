@@ -1,5 +1,5 @@
 ---
-name: compound
+name: yeet-compound
 description: >
   The fourth move of the spec-driven loop. Captures the knowledge accumulated during a
   completed feature, makes it findable, updates the project so future agents apply it, and
@@ -93,8 +93,8 @@ echo "BASE=$BASE TODAY=$TODAY"
 
 Then locate the spec. If the user passed an explicit spec path
 (`/yeet:compound docs/specs/<slug>.md`), use it directly. Otherwise, locate it the same way
-`review` does: branch-name slug match (with prefix stripping), then `status: in-progress`
-fallback, then ask if ambiguous.
+`yeet-review` does: branch-name slug match (with prefix stripping), then
+`status: in-progress` fallback, then ask if ambiguous.
 
 Note both `BASE` and the spec path; you'll pass them into each sub-agent prompt.
 

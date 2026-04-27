@@ -1,5 +1,5 @@
 ---
-name: init
+name: yeet-init
 description: >
   One-time setup for adopting yeet on a project. Creates docs/specs/ and docs/solutions/,
   and teaches the project's CLAUDE.md (or AGENTS.md) about the spec-driven workflow so
@@ -42,9 +42,9 @@ tools: ["Read", "Write", "Edit", "Glob", "Bash"]
 You bootstrap a project to use yeet. Run once when adopting yeet on a project; safe to run
 again to verify or refresh.
 
-This is the inverse of `compound`'s discoverability check: that one teaches the project
-about the **knowledge store** (`docs/solutions/`). This one teaches the project about the
-**workflow** (when to use `/yeet:spec`, `/yeet:review`, `/yeet:compound`).
+This is the inverse of `yeet-compound`'s discoverability check: that one teaches the
+project about the **knowledge store** (`docs/solutions/`). This one teaches the project
+about the **workflow** (when to use `/yeet:spec`, `/yeet:review`, `/yeet:compound`).
 
 The five steps run in order; later steps depend on earlier results.
 

@@ -1,5 +1,5 @@
 ---
-name: spec-review
+name: yeet-spec-review
 description: >
   Reviews a spec for quality before implementation begins. Catches ambiguity and gaps that
   would force an agent to make assumptions during implementation. Returns findings; does not
@@ -54,10 +54,10 @@ Use mtime, not filename, to determine "most recently modified."
 
 ## What to check
 
-Load the `spec-template` skill via Bash, then read its output as the canonical format:
+Load the `yeet-spec-template` skill via Bash, then read its output as the canonical format:
 
 ```bash
-cat "${CLAUDE_PLUGIN_ROOT}/skills/spec-template/SKILL.md"
+cat "${CLAUDE_PLUGIN_ROOT}/skills/yeet-spec-template/SKILL.md"
 ```
 
 Then check the spec against these criteria:

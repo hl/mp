@@ -47,23 +47,27 @@ findings, then `/yeet:compound` writes the learning.
 yeet/
 ├── .claude-plugin/plugin.json
 ├── skills/
-│   ├── spec-template/SKILL.md       # canonical spec format
-│   └── brainstorm-approach/SKILL.md # discovery question cadence
+│   ├── yeet-spec-template/SKILL.md       # canonical spec format
+│   └── yeet-brainstorm-approach/SKILL.md # discovery question cadence
 ├── agents/
-│   ├── init.md                      # one-time project bootstrap
-│   ├── spec.md                      # decides + writes specs
-│   ├── spec-review.md               # validates specs
-│   ├── review.md                    # checks implementation vs spec
-│   ├── compound.md                  # extracts reusable insight
-│   └── refresh.md                   # maintains the knowledge store
+│   ├── yeet-init.md                      # one-time project bootstrap
+│   ├── yeet-spec.md                      # decides + writes specs
+│   ├── yeet-spec-review.md               # validates specs
+│   ├── yeet-review.md                    # checks implementation vs spec
+│   ├── yeet-compound.md                  # extracts reusable insight
+│   └── yeet-refresh.md                   # maintains the knowledge store
 └── commands/
-    ├── init.md
-    ├── spec.md
-    ├── spec-review.md
-    ├── review.md
-    ├── compound.md
-    └── refresh.md
+    ├── init.md                           # → /yeet:init
+    ├── spec.md                           # → /yeet:spec
+    ├── spec-review.md                    # → /yeet:spec-review
+    ├── review.md                         # → /yeet:review
+    ├── compound.md                       # → /yeet:compound
+    └── refresh.md                        # → /yeet:refresh
 ```
+
+Internal names (agents and skills) are prefixed with `yeet-` to prevent collisions across
+plugins. Command file names stay unprefixed — the plugin's namespace is automatically
+prepended in the slash-command surface (`/yeet:spec`).
 
 Commands are thin wrappers — they delegate to the matching agent via the Agent tool.
 
