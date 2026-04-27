@@ -78,7 +78,7 @@ cp -r ~/.claude/hl-mp/plugins/skills/<plugin-name>/skills/<plugin-name> ~/.claud
 | Plugin | Description |
 |--------|-------------|
 | **oi** | Inter-session messaging for Claude Code — send and receive messages between independent sessions. |
-| **spec** | Spec-driven development: collaboratively write testable specifications, review them for gaps and contradictions, then implement them with tests-first incremental builds. |
+| **yeet** | Spec-driven workflow plugin. |
 <!-- PLUGINS:END -->
 
 ## Contributing

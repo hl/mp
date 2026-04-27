@@ -16,15 +16,6 @@
       }
     },
     {
-      "name": "spec",
-      "source": "./plugins/skills/spec",
-      "description": "Review specs in docs/specs/ for gaps, contradictions, and inconsistencies.",
-      "version": "1.2.0",
-      "author": {
-        "name": "hl"
-      }
-    },
-    {
       "name": "yeet",
       "source": "./plugins/skills/yeet",
       "description": "Spec-driven workflow plugin. Brainstorm, write specs, review implementations, and compound solutions.",
