@@ -1,0 +1,8 @@
+{
+  "name": "yeet",
+  "description": "Spec-driven workflow plugin. Brainstorm, write specs, review implementations, and compound solutions.",
+  "version": "1.0.0",
+  "author": {
+    "name": "hl"
+  }
+}
