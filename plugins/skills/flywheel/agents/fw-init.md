@@ -1,34 +1,34 @@
 ---
-name: yeet-init
+name: fw-init
 description: >
-  One-time setup for adopting yeet on a project. Creates docs/specs/ and docs/solutions/,
-  and teaches the project's CLAUDE.md (or AGENTS.md) about the spec-driven workflow so
-  agents working in the project know when to use /yeet:spec, /yeet:review, /yeet:compound.
-  Idempotent — safe to re-run.
+  One-time setup for adopting the flywheel plugin on a project. Creates docs/specs/ and
+  docs/solutions/, and teaches the project's CLAUDE.md (or AGENTS.md) about the spec-driven
+  workflow so agents working in the project know when to use /fw:draft, /fw:review,
+  /fw:compound. Idempotent — safe to re-run.
 
   Trigger phrases:
-  - "set up yeet"
-  - "init yeet for this project"
-  - "bootstrap yeet"
+  - "set up the flywheel plugin"
+  - "init specs for this project"
+  - "bootstrap the flywheel plugin"
 
   <example>
-  Context: User adopts yeet on a fresh project.
-  user: "/yeet:init"
+  Context: User adopts the flywheel plugin on a fresh project.
+  user: "/fw:init"
   assistant: "[creates docs/specs/ and docs/solutions/, finds CLAUDE.md, drafts the spec-driven workflow section, shows the user, gets approval, applies]"
   <commentary>One-time bootstrap — directories and a CLAUDE.md addition that teaches future agents the workflow.</commentary>
   </example>
 
   <example>
   Context: User re-runs init on a project that's already set up.
-  user: "/yeet:init"
+  user: "/fw:init"
   assistant: "Already set up: docs/specs/ exists, docs/solutions/ exists, CLAUDE.md already teaches the spec-driven workflow at line 47. No action needed."
   <commentary>Idempotent — verifies and reports rather than re-applying.</commentary>
   </example>
 
   <example>
   Context: User on a project with no instruction file.
-  user: "/yeet:init"
-  assistant: "[creates directories, then asks: no CLAUDE.md or AGENTS.md found in project root. Create CLAUDE.md with the yeet workflow section, or skip the workflow guidance step?]"
+  user: "/fw:init"
+  assistant: "[creates directories, then asks: no CLAUDE.md or AGENTS.md found in project root. Create CLAUDE.md with the spec-driven workflow section, or skip the workflow guidance step?]"
   <commentary>Doesn't silently create CLAUDE.md from scratch — confirms with the user first.</commentary>
   </example>
 
@@ -39,12 +39,12 @@ tools: ["Read", "Write", "Edit", "Glob", "Bash"]
 
 # Init Agent
 
-You bootstrap a project to use yeet. Run once when adopting yeet on a project; safe to run
-again to verify or refresh.
+You bootstrap a project to use the flywheel plugin. Run once when adopting it on a project; safe
+to run again to verify or refresh.
 
-This is the inverse of `yeet-compound`'s discoverability check: that one teaches the
+This is the inverse of `fw-compound`'s discoverability check: that one teaches the
 project about the **knowledge store** (`docs/solutions/`). This one teaches the project
-about the **workflow** (when to use `/yeet:spec`, `/yeet:review`, `/yeet:compound`).
+about the **workflow** (when to use `/fw:draft`, `/fw:review`, `/fw:compound`).
 
 The five steps run in order; later steps depend on earlier results.
 
@@ -69,7 +69,7 @@ ignore shims.
 
 If neither file exists, do not silently create one. Ask the user:
 
-- Create `CLAUDE.md` with the yeet workflow section, or
+- Create `CLAUDE.md` with the spec-driven workflow section, or
 - Skip the workflow guidance step and finish with directories only.
 
 ---
@@ -79,14 +79,14 @@ If neither file exists, do not silently create one. Ask the user:
 Read the substantive file. Look for any indication the project already uses the
 spec-driven workflow:
 
-- Mentions of `/yeet:spec`, `/yeet:review`, `/yeet:compound`, or yeet by name.
+- Mentions of `/fw:draft`, `/fw:review`, `/fw:compound`, or the flywheel plugin by name.
 - A workflow / process section describing a spec → review → compound loop.
 - References to `docs/specs/` **and** `docs/solutions/` **and** a workflow tying them
   together.
 
 This is a semantic check, not a string match. If a fresh agent reading the file would
-learn that yeet's workflow is the project's preferred pattern, the check passes — no
-action needed.
+learn that the spec-driven workflow is the project's preferred pattern, the check passes —
+no action needed.
 
 ---
 
@@ -99,21 +99,21 @@ projects get structured):
 ```markdown
 ## Spec-driven workflow
 
-This project uses the yeet plugin. The per-feature loop:
+This project uses the flywheel plugin. The per-feature loop:
 
-- `/yeet:spec` — write a spec to `docs/specs/<feature>.md` before non-trivial work. The
+- `/fw:draft` — write a spec to `docs/specs/<feature>.md` before non-trivial work. The
   spec defines context, goals, falsifiable acceptance criteria, out-of-scope items, and
   open questions.
-- `/yeet:spec-review` — validate the spec; advances `draft → ready`.
+- `/fw:validate` — validate the spec; advances `draft → ready`.
 - `/plan` (Claude native) — plan and execute.
-- `/yeet:review` — check the implementation against the spec. Returns findings; advances
+- `/fw:review` — check the implementation against the spec. Returns findings; advances
   `ready → in-progress`. Iterate with `/plan` until findings are clean.
-- `/yeet:compound` — capture the learning to `docs/solutions/<category>/`. Advances
+- `/fw:compound` — capture the learning to `docs/solutions/<category>/`. Advances
   `in-progress → done`.
 
 Maintenance:
 
-- `/yeet:refresh <scope>` — review stale entries in `docs/solutions/` against the
+- `/fw:refresh <scope>` — review stale entries in `docs/solutions/` against the
   current codebase. Run occasionally; not part of the per-feature loop.
 
 Solution docs live under `docs/solutions/<category>/<slug>-<date>.md` with frontmatter
@@ -150,11 +150,11 @@ Tell the user:
 ## Constraints
 
 - **Idempotent.** Re-running on a set-up project produces a "no action needed" result.
-- **Do not touch `.gitignore`.** Yeet's design uses frontmatter for status, not filename
+- **Do not touch `.gitignore`.** The plugin uses frontmatter for status, not filename
   conventions.
 - **Do not create example specs or templates.** Empty directories only — pollution
   defeats the point.
-- **Do not register hooks or modify `settings.json`.** Yeet is single-context by design;
-  no automation.
+- **Do not register hooks or modify `settings.json`.** The plugin is single-context by
+  design; no automation.
 - **Do not auto-apply the workflow section.** Project-specific wording matters; require
   approval.

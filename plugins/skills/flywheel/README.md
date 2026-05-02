@@ -1,18 +1,20 @@
-# Yeet
+# Flywheel
 
 Spec-driven workflow plugin for Claude Code. Brainstorm, write specs, review
 implementations, and compound learnings — all designed for full agent autonomy.
 
 Built on the Compound Engineering principle: **each unit of work should make the next one
 easier, not harder.** The first three steps produce a feature; the fourth produces a system
-that builds features better next time.
+that builds features better next time. Hence the name — momentum that accumulates with use.
+
+The plugin's manifest name is `fw` (short for flywheel), so slash commands are `/fw:*`.
 
 ## Quick start
 
 ```
-First time on a project:   /yeet:init           # bootstrap (idempotent)
-Per feature (the loop):    /yeet:spec → /yeet:spec-review → /plan → /yeet:review → /yeet:compound
-Maintenance, occasional:   /yeet:refresh <scope>
+First time on a project:   /fw:init           # bootstrap (idempotent)
+Per feature (the loop):    /fw:draft → /fw:validate → /plan → /fw:review → /fw:compound
+Maintenance, occasional:   /fw:refresh <scope>
 ```
 
 ## Flow
@@ -20,54 +22,54 @@ Maintenance, occasional:   /yeet:refresh <scope>
 The per-feature loop with status transitions:
 
 ```
-/yeet:spec          → docs/specs/<feature>.md                              (status: draft)
-/yeet:spec-review   → validates the spec                                   (status: ready)
-/plan               → Claude native (plans + executes)
-/yeet:review        → checks implementation vs spec, findings → /plan      (status: in-progress)
-/yeet:compound      → docs/solutions/<category>/<feature>-<date>.md        (status: done)
+/fw:draft      → docs/specs/<feature>.md                            (status: draft)
+/fw:validate   → validates the spec                                 (status: ready)
+/plan          → Claude native (plans + executes)
+/fw:review     → checks implementation vs spec, findings → /plan    (status: in-progress)
+/fw:compound   → docs/solutions/<category>/<feature>-<date>.md      (status: done)
 ```
 
-The `/plan ↔ /yeet:review` cycle repeats until `/yeet:review` returns no outstanding
-findings, then `/yeet:compound` writes the learning.
+The `/plan ↔ /fw:review` cycle repeats until `/fw:review` returns no outstanding
+findings, then `/fw:compound` writes the learning.
 
 ## Commands
 
 | Command | What it does |
 |---|---|
-| `/yeet:init` | One-time setup. Creates `docs/specs/` and `docs/solutions/`, teaches `CLAUDE.md` about the workflow. Idempotent. |
-| `/yeet:spec` | Brainstorms (if fuzzy) and writes a spec. Skips if the work doesn't warrant one. |
-| `/yeet:spec-review` | Validates a spec for falsifiable criteria, scope, and open questions. |
-| `/yeet:review` | Checks the current implementation against the spec. Returns findings. |
-| `/yeet:compound` | Captures, makes findable, updates the system, verifies the learning. Writes to `docs/solutions/<category>/`. |
-| `/yeet:refresh` | Maintenance. Reviews stale entries in `docs/solutions/` against the current codebase and proposes targeted updates. Requires a scope. |
+| `/fw:init` | One-time setup. Creates `docs/specs/` and `docs/solutions/`, teaches `CLAUDE.md` about the workflow. Idempotent. |
+| `/fw:draft` | Brainstorms (if fuzzy) and writes a spec. Skips if the work doesn't warrant one. |
+| `/fw:validate` | Validates a spec for falsifiable criteria, scope, and open questions. |
+| `/fw:review` | Checks the current implementation against the spec. Returns findings. |
+| `/fw:compound` | Captures, makes findable, updates the system, verifies the learning. Writes to `docs/solutions/<category>/`. |
+| `/fw:refresh` | Maintenance. Reviews stale entries in `docs/solutions/` against the current codebase and proposes targeted updates. Requires a scope. |
 
 ## Structure
 
 ```
-yeet/
+flywheel/
 ├── .claude-plugin/plugin.json
 ├── skills/
-│   ├── yeet-spec-template/SKILL.md       # canonical spec format
-│   └── yeet-brainstorm-approach/SKILL.md # discovery question cadence
+│   ├── fw-template/SKILL.md            # canonical spec format
+│   └── fw-brainstorm-approach/SKILL.md # discovery question cadence
 ├── agents/
-│   ├── yeet-init.md                      # one-time project bootstrap
-│   ├── yeet-spec.md                      # decides + writes specs
-│   ├── yeet-spec-review.md               # validates specs
-│   ├── yeet-review.md                    # checks implementation vs spec
-│   ├── yeet-compound.md                  # extracts reusable insight
-│   └── yeet-refresh.md                   # maintains the knowledge store
+│   ├── fw-init.md                      # one-time project bootstrap
+│   ├── fw-draft.md                     # decides + writes specs
+│   ├── fw-validate.md                  # validates specs
+│   ├── fw-review.md                    # checks implementation vs spec
+│   ├── fw-compound.md                  # extracts reusable insight
+│   └── fw-refresh.md                   # maintains the knowledge store
 └── commands/
-    ├── init.md                           # → /yeet:init
-    ├── spec.md                           # → /yeet:spec
-    ├── spec-review.md                    # → /yeet:spec-review
-    ├── review.md                         # → /yeet:review
-    ├── compound.md                       # → /yeet:compound
-    └── refresh.md                        # → /yeet:refresh
+    ├── init.md                         # → /fw:init
+    ├── draft.md                        # → /fw:draft
+    ├── validate.md                     # → /fw:validate
+    ├── review.md                       # → /fw:review
+    ├── compound.md                     # → /fw:compound
+    └── refresh.md                      # → /fw:refresh
 ```
 
-Internal names (agents and skills) are prefixed with `yeet-` to prevent collisions across
-plugins. Command file names stay unprefixed — the plugin's namespace is automatically
-prepended in the slash-command surface (`/yeet:spec`).
+Internal names (agents and skills) are prefixed with `fw-` to prevent collisions across
+plugins. The plugin's `plugin.json` name is `fw`, so each command file in `commands/` is
+exposed as `/fw:<filename>`.
 
 Commands are thin wrappers — they delegate to the matching agent via the Agent tool.
 
@@ -75,9 +77,9 @@ Commands are thin wrappers — they delegate to the matching agent via the Agent
 
 ```
 your-project/
-├── CLAUDE.md                                # /yeet:compound updates this for discoverability
+├── CLAUDE.md                                # /fw:compound updates this for discoverability
 └── docs/
-    ├── specs/                                # one spec per feature, written by /yeet:spec
+    ├── specs/                                # one spec per feature, written by /fw:draft
     └── solutions/
         ├── architecture-patterns/
         ├── design-patterns/
@@ -94,7 +96,7 @@ Directories are created on demand. Solution docs are classified into a knowledge
 (features, patterns, conventions) or bug track (defects, root-cause fixes), and filed under
 the matching category.
 
-## How `/yeet:compound` works
+## How `/fw:compound` works
 
 Compound is the fourth move of the per-feature loop and runs four internal moves:
 
@@ -114,7 +116,7 @@ Compound is the fourth move of the per-feature loop and runs four internal moves
 4. **Verify** — articulates the queries a future agent would run when hitting this
    problem and confirms the doc's tags and title would surface for those queries.
 
-## How `/yeet:refresh` works
+## How `/fw:refresh` works
 
 Refresh is maintenance, not part of the feature loop. Always runs against a narrow scope
 (category, module, tag, or a single doc path). Refuses to scan the whole knowledge store
@@ -143,5 +145,5 @@ dependency upgrade, or a convention change).
 ## Installation
 
 ```
-/plugin install yeet@hl-mp
+/plugin install fw@hl-mp
 ```

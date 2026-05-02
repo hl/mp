@@ -3,6 +3,6 @@ description: Check the current implementation against the spec. Produces finding
 argument-hint: optional path to a specific spec file
 ---
 
-Use the Agent tool with `subagent_type: "yeet-review"` to handle this request. Pass the user's full request to the agent as its prompt.
+Use the Agent tool with `subagent_type: "fw-review"` to handle this request. Pass the user's full request to the agent as its prompt.
 
 User request: $ARGUMENTS

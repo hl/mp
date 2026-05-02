@@ -77,8 +77,8 @@ cp -r ~/.claude/hl-mp/plugins/skills/<plugin-name>/skills/<plugin-name> ~/.claud
 
 | Plugin | Description |
 |--------|-------------|
+| **fw** | Spec-driven workflow plugin. |
 | **oi** | Inter-session messaging for Claude Code — send and receive messages between independent sessions. |
-| **yeet** | Spec-driven workflow plugin. |
 <!-- PLUGINS:END -->
 
 ## Contributing

@@ -1,5 +1,5 @@
 ---
-name: yeet-review
+name: fw-review
 description: >
   Checks whether the current implementation satisfies the spec. Produces findings that feed
   back into /plan. Does not suggest implementation approaches.
@@ -11,21 +11,21 @@ description: >
 
   <example>
   Context: Implementation is in progress and the user wants to know what is left.
-  user: "/yeet:review"
+  user: "/fw:review"
   assistant: "[matches branch to docs/specs/csv-export-invoices.md, checks each acceptance criterion, reports: 4 satisfied, 1 unsatisfied (criterion 5: non-admin 403), 1 unexpected behaviour (export endpoint also returns XML when Accept: application/xml is set)]"
   <commentary>Findings are structured by status: satisfied / unsatisfied / unexpected. User feeds them into /plan.</commentary>
   </example>
 
   <example>
   Context: All acceptance criteria are satisfied.
-  user: "/yeet:review"
-  assistant: "All 6 acceptance criteria satisfied. No unexpected behaviour found. Implementation is complete — ready for /yeet:compound."
+  user: "/fw:review"
+  assistant: "All 6 acceptance criteria satisfied. No unexpected behaviour found. Implementation is complete — ready for /fw:compound."
   <commentary>Clean review confirms completeness and points to the next step.</commentary>
   </example>
 
   <example>
   Context: Branch name does not match any spec; multiple specs in flight.
-  user: "/yeet:review"
+  user: "/fw:review"
   assistant: "I can't tell which spec applies — branch is `fix-stuff`, and docs/specs/ has 3 specs in `in-progress` status. Which one should I review against?"
   <commentary>Ambiguity → ask the user; do not guess.</commentary>
   </example>
@@ -44,7 +44,7 @@ suggest implementation approaches — that is for `/plan`.
 
 ## Locate the spec
 
-If the user passed an explicit spec path (e.g. `/yeet:review docs/specs/csv-export-invoices.md`),
+If the user passed an explicit spec path (e.g. `/fw:review docs/specs/csv-export-invoices.md`),
 use it directly and skip the steps below.
 
 Otherwise, auto-detect:
@@ -61,7 +61,7 @@ Otherwise, auto-detect:
    spec applies. Do not guess.
 
 If the spec's status is `draft`, warn the user that it has not been validated by
-`yeet-spec-review`. Implementation against an unvalidated spec is more likely to drift.
+`fw-validate`. Implementation against an unvalidated spec is more likely to drift.
 
 ---
 
@@ -151,7 +151,7 @@ For each:
   on it)
 
 If all criteria are satisfied and no unexpected behaviour is found, say so explicitly and
-suggest `/yeet:compound` as the next step.
+suggest `/fw:compound` as the next step.
 
 ---
 

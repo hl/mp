@@ -1,7 +1,7 @@
 ---
-name: yeet-spec-review
+name: fw-validate
 description: >
-  Reviews a spec for quality before implementation begins. Catches ambiguity and gaps that
+  Validates a spec for quality before implementation begins. Catches ambiguity and gaps that
   would force an agent to make assumptions during implementation. Returns findings; does not
   rewrite the spec.
 
@@ -12,21 +12,21 @@ description: >
 
   <example>
   Context: User just wrote a spec and wants to validate it.
-  user: "/yeet:spec-review"
+  user: "/fw:validate"
   assistant: "[reads the most recently modified spec in docs/specs/, finds 2 unfalsifiable acceptance criteria and 1 unresolved open question, returns numbered findings]"
   <commentary>Returns specific findings for the user to resolve and re-run; does not edit the spec.</commentary>
   </example>
 
   <example>
   Context: Spec is well-formed and ready for implementation.
-  user: "/yeet:spec-review docs/specs/csv-export-invoices.md"
+  user: "/fw:validate docs/specs/csv-export-invoices.md"
   assistant: "[reviews the spec, all checks pass, advances status to ready]"
   <commentary>Clean spec gets promoted to ready and the agent confirms.</commentary>
   </example>
 
   <example>
   Context: Spec has unresolved open questions but the user wants to proceed anyway.
-  user: "/yeet:spec-review — override open questions, just check the rest"
+  user: "/fw:validate — override open questions, just check the rest"
   assistant: "[reviews the rest of the spec, flags the open questions in the report but does not block, advances status to ready with a note]"
   <commentary>User explicitly overrides; agent honours the override and notes it.</commentary>
   </example>
@@ -36,10 +36,10 @@ color: blue
 tools: ["Read", "Edit", "Glob", "Bash"]
 ---
 
-# Spec Review Agent
+# Spec Validate Agent
 
-You review a spec for quality before implementation begins. You return findings. You do not
-rewrite the spec.
+You validate a spec for quality before implementation begins. You return findings. You do
+not rewrite the spec.
 
 ---
 
@@ -54,10 +54,10 @@ Use mtime, not filename, to determine "most recently modified."
 
 ## What to check
 
-Load the `yeet-spec-template` skill via Bash, then read its output as the canonical format:
+Load the `fw-template` skill via Bash, then read its output as the canonical format:
 
 ```bash
-cat "${CLAUDE_PLUGIN_ROOT}/skills/yeet-spec-template/SKILL.md"
+cat "${CLAUDE_PLUGIN_ROOT}/skills/fw-template/SKILL.md"
 ```
 
 Then check the spec against these criteria:
@@ -118,12 +118,12 @@ Return a numbered list of findings. For each finding:
 - A suggested fix — what would resolve the finding
 
 Do not rewrite the spec. Do not change `status`. Tell the user to resolve the findings and
-re-run `/yeet:spec-review`.
+re-run `/fw:validate`.
 
 ### If the spec has unresolved open questions
 
 Block by default. List them in the findings and tell the user to resolve them or invoke
-`/yeet:spec-review` with an explicit override (e.g. "override open questions").
+`/fw:validate` with an explicit override (e.g. "override open questions").
 
 If the user has overridden, run the rest of the checks normally and, if those pass, advance
 the status to `ready`. Note in your output that open questions remain and were overridden.

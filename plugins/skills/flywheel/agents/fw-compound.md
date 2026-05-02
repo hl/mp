@@ -1,5 +1,5 @@
 ---
-name: yeet-compound
+name: fw-compound
 description: >
   The fourth move of the spec-driven loop. Captures the knowledge accumulated during a
   completed feature, makes it findable, updates the project so future agents apply it, and
@@ -16,21 +16,21 @@ description: >
 
   <example>
   Context: Review reported no outstanding findings.
-  user: "/yeet:compound"
+  user: "/fw:compound"
   assistant: "[spawns 3 parallel Explore sub-agents (journey, code, overlap), waits for all, classifies as knowledge track / architecture-patterns, writes docs/solutions/architecture-patterns/csv-export-invoices-2026-04-27.md, runs discoverability check on CLAUDE.md, advances spec status to done]"
   <commentary>Three parallel reads in Move 1; assembly and writes are sequential in Moves 2–4.</commentary>
   </example>
 
   <example>
   Context: Review still has unsatisfied criteria.
-  user: "/yeet:compound"
-  assistant: "Cannot compound yet — /yeet:review still reports 2 unsatisfied criteria. Resolve those first, re-run review, then compound."
+  user: "/fw:compound"
+  assistant: "Cannot compound yet — /fw:review still reports 2 unsatisfied criteria. Resolve those first, re-run review, then compound."
   <commentary>Compound refuses to run on incomplete work.</commentary>
   </example>
 
   <example>
   Context: A high overlap with an existing solution doc is detected by the overlap scanner.
-  user: "/yeet:compound"
+  user: "/fw:compound"
   assistant: "[detects high overlap with docs/solutions/conventions/csv-export-pattern-2026-02-10.md, updates that doc with current code examples and adds last_updated: 2026-04-27, instead of creating a duplicate]"
   <commentary>Updates the existing doc rather than creating a near-duplicate that will drift.</commentary>
   </example>
@@ -53,16 +53,16 @@ The agent does four ordered things. Move 1 parallelizes; Moves 2–4 are sequent
 
 ## Precondition
 
-The normal entry condition is that `/yeet:review` has just reported no outstanding findings,
+The normal entry condition is that `/fw:review` has just reported no outstanding findings,
 which leaves the spec at `status: in-progress`.
 
 Decide based on the spec's current status:
 
 - `in-progress` → proceed.
-- `ready` → `/yeet:review` was skipped. Proceed only if the work is genuinely small and
+- `ready` → `/fw:review` was skipped. Proceed only if the work is genuinely small and
   verifiable without a formal review; ask the user to confirm before continuing.
 - `draft` → the spec has not been validated. Stop and tell the user to run
-  `/yeet:spec-review` first.
+  `/fw:validate` first.
 - `done` → already compounded. Stop and tell the user.
 
 Independently, if the work is trivial (a typo fix, a one-line change with no decision behind
@@ -92,8 +92,8 @@ echo "BASE=$BASE TODAY=$TODAY"
 ```
 
 Then locate the spec. If the user passed an explicit spec path
-(`/yeet:compound docs/specs/<slug>.md`), use it directly. Otherwise, locate it the same way
-`yeet-review` does: branch-name slug match (with prefix stripping), then
+(`/fw:compound docs/specs/<slug>.md`), use it directly. Otherwise, locate it the same way
+`fw-review` does: branch-name slug match (with prefix stripping), then
 `status: in-progress` fallback, then ask if ambiguous.
 
 Note both `BASE` and the spec path; you'll pass them into each sub-agent prompt.
@@ -210,7 +210,7 @@ specifically or to proceed with what you have. Do not silently skip.
 Based on the assembled inputs, pick one:
 
 - **Knowledge track** — features, patterns, conventions, architectural choices, workflow
-  improvements, tooling decisions. The default for most yeet specs.
+  improvements, tooling decisions. The default for most specs.
 - **Bug track** — defects, root-cause investigations, incident fixes. Use this when the
   spec was for a bug or when the work surfaced significant root-cause analysis.
 
@@ -395,7 +395,7 @@ is hope, not engineering.
 
 After all four moves are complete, update the spec's `status` to `done` (use `Edit`).
 Expected current value is `in-progress`; `ready` is also accepted for cases where compound
-ran without a prior `/yeet:review`.
+ran without a prior `/fw:review`.
 
 ---
 

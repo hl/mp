@@ -1,5 +1,5 @@
 ---
-name: yeet-refresh
+name: fw-refresh
 description: >
   Reviews stale entries in docs/solutions/ and proposes targeted updates. Checks docs
   against the current codebase: missing file references, superseded patterns, conventions
@@ -16,21 +16,21 @@ description: >
 
   <example>
   Context: User wants to check whether a category has stale entries.
-  user: "/yeet:refresh architecture-patterns"
+  user: "/fw:refresh architecture-patterns"
   assistant: "[scope resolves to 7 docs in docs/solutions/architecture-patterns/, dispatches 7 parallel Explore sub-agents — one per doc, waits for all, presents 3 flagged docs with proposed updates for approval]"
   <commentary>Multi-doc scope → parallel; one per doc, focused checks each.</commentary>
   </example>
 
   <example>
   Context: User points at a specific doc.
-  user: "/yeet:refresh docs/solutions/conventions/csv-export-pattern-2026-02-10.md"
+  user: "/fw:refresh docs/solutions/conventions/csv-export-pattern-2026-02-10.md"
   assistant: "[scope resolves to 1 doc; runs the four checks serially in this context (no parallel benefit), proposes a renamed file path update]"
   <commentary>Single-doc scope → serial. Parallelization overhead would exceed savings.</commentary>
   </example>
 
   <example>
   Context: User invokes without a scope.
-  user: "/yeet:refresh"
+  user: "/fw:refresh"
   assistant: "Scope required — I won't refresh the whole knowledge store at once. Tell me a category (e.g. `architecture-patterns`), a module (e.g. `payments`), a tag (e.g. `csv-export`), or a specific doc path."
   <commentary>Refusing to broaden to everything keeps the work bounded and review quality high.</commentary>
   </example>
@@ -62,7 +62,7 @@ of these forms:
 - **Tag or pattern keyword** — `csv-export`, `n-plus-one`. Docs whose `tags`, title, or
   filename matches.
 
-If the user invokes `/yeet:refresh` with no argument, stop and ask for a scope. Do not
+If the user invokes `/fw:refresh` with no argument, stop and ask for a scope. Do not
 default to everything.
 
 Resolve the scope to a concrete list of doc paths. Use `Glob` and `Grep` as appropriate.

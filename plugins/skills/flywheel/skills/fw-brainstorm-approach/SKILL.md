@@ -1,11 +1,11 @@
 ---
-name: yeet-brainstorm-approach
+name: fw-brainstorm-approach
 description: Question cadence for structured discovery. Load when a brief is ambiguous and a spec needs to be written.
 ---
 
 # Brainstorm Approach
 
-Used by the `yeet-spec` agent when the brief is fuzzy and a spec cannot be written without
+Used by the `fw-draft` agent when the brief is fuzzy and a spec cannot be written without
 more context. Defines the question order, the conversation rules, and the threshold for
 "enough information to write a spec."
 

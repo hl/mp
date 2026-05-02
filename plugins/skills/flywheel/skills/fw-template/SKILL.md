@@ -1,13 +1,13 @@
 ---
-name: yeet-spec-template
+name: fw-template
 description: Canonical spec format for agent-driven development. Load when writing or reading a spec.
 ---
 
 # Spec Template
 
-Defines the canonical spec format used across the yeet workflow. Every spec produced by the
-`yeet-spec` agent uses this structure. Every spec read by `yeet-spec-review`, `yeet-review`,
-and `yeet-compound` relies on it.
+Defines the canonical spec format used across the spec-driven workflow. Every spec produced
+by the `fw-draft` agent uses this structure. Every spec read by `fw-validate`,
+`fw-review`, and `fw-compound` relies on it.
 
 The reader of every spec is an LLM agent. Precision over readability.
 
@@ -39,19 +39,19 @@ The feature name. Matches the slug, expanded for human reading.
 
 One of:
 - `draft` — written, not yet validated
-- `ready` — passed `yeet-spec-review`, ready for implementation
+- `ready` — passed `fw-validate`, ready for implementation
 - `in-progress` — implementation underway
-- `done` — all acceptance criteria satisfied; `yeet-compound` has been run
+- `done` — all acceptance criteria satisfied; `fw-compound` has been run
 
 Lifecycle setters:
-- `yeet-spec` sets this to `draft` on creation.
-- `yeet-spec-review` advances `draft → ready` when checks pass.
-- `yeet-review` advances `ready → in-progress` on its first run, signalling that
+- `fw-draft` sets this to `draft` on creation.
+- `fw-validate` advances `draft → ready` when checks pass.
+- `fw-review` advances `ready → in-progress` on its first run, signalling that
   implementation has started.
-- `yeet-compound` advances `in-progress → done` (or `ready → done` if `yeet-compound` runs
-  without a prior `yeet-review`).
+- `fw-compound` advances `in-progress → done` (or `ready → done` if `fw-compound` runs
+  without a prior `fw-review`).
 
-`in-progress` is also how `yeet-review` and `yeet-compound` find the active spec when the
+`in-progress` is also how `fw-review` and `fw-compound` find the active spec when the
 branch name does not match a spec slug.
 
 ### `context`
@@ -105,7 +105,7 @@ Anything unresolved that could force an assumption during implementation.
 
 If empty, write: "Open questions: none."
 
-`yeet-spec-review` will not promote the spec to `ready` while open questions remain unless
+`fw-validate` will not promote the spec to `ready` while open questions remain unless
 the user explicitly overrides.
 
 ---
