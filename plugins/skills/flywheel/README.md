@@ -38,8 +38,9 @@ Operational safeguards:
   decisions influence the next unit of work.
 - `/fw:review` evaluates committed, staged, unstaged, and untracked changes, then records a
   clean/finding result plus an evidence hash in the spec frontmatter.
-- `/fw:compound` verifies that clean review evidence is still current, or runs a local final
-  acceptance gate before writing solution docs.
+- `/fw:compound` verifies that the recorded clean-review evidence is still current before
+  writing solution docs. If the implementation changed since the last clean review, it stops
+  and asks for a fresh `/fw:review` rather than re-evaluating in place.
 
 ## Commands
 
@@ -67,6 +68,8 @@ flywheel/
 │   ├── fw-review.md                    # checks implementation vs spec
 │   ├── fw-compound.md                  # extracts reusable insight
 │   └── fw-refresh.md                   # maintains the knowledge store
+├── scripts/
+│   └── review-evidence-hash.sh         # canonical review-evidence digest
 └── commands/
     ├── init.md                         # → /fw:init
     ├── draft.md                        # → /fw:draft

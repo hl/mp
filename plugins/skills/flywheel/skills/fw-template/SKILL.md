@@ -54,6 +54,24 @@ Lifecycle setters:
 `in-progress` is also how `fw-review` and `fw-compound` find the active spec when the
 branch name does not match a spec slug.
 
+### Agent-managed review metadata (frontmatter)
+
+`fw-review` writes the following keys after each run. They are how `fw-compound` decides
+whether the implementation has changed since the last clean review. Treat them as
+agent-managed: do not hand-edit, and preserve them when editing other parts of the
+frontmatter.
+
+- `last_review_status` — `clean` or `findings`.
+- `last_reviewed_at` — `YYYY-MM-DD` of the last review run.
+- `last_review_base` — the merge-base commit-ish used as the diff range origin.
+- `last_review_head` — the HEAD SHA at review time.
+- `last_review_worktree` — `clean` or `dirty` at review time.
+- `last_review_diff_hash` — SHA-256 of the canonical evidence inputs (committed, staged,
+  unstaged, and untracked content), produced by `scripts/review-evidence-hash.sh`.
+
+`fw-compound` reads these and refuses to compound when they are absent or when the recorded
+hash no longer matches the current worktree.
+
 ### `context`
 
 What exists today, what problem this solves, what the boundaries are. Written so an agent with

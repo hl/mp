@@ -70,20 +70,36 @@ it), do not compound at all — even if the status would otherwise allow it. Com
 pollutes the knowledge store. The bar is: would a future agent benefit from finding this six
 months from now?
 
-Before writing any solution doc, verify the review evidence:
+---
 
-1. The spec frontmatter must contain `last_review_status: clean`.
-2. Recompute the current review evidence hash using the same inputs as `/fw:review`
-   (`git diff $BASE...HEAD`, `git diff --cached`, `git diff`, and readable untracked file
-   content) and compare it to `last_review_diff_hash`.
-3. If the hash differs, or if review metadata is absent, run a local final acceptance gate:
-   evaluate every acceptance criterion against the current committed, staged, unstaged, and
-   untracked changes. If any criterion is partial/unsatisfied, or any unexpected behaviour or
-   scope creep appears, stop and return those findings instead of compounding.
-4. If the local final acceptance gate passes, continue and update the review metadata while
-   setting the spec to `done` at the end.
+## Verify the review evidence (before Move 1)
 
-This prevents `/fw:compound` from blessing work that changed after review.
+Run this verification gate before dispatching any sub-agents — Move 1's parallel reads are
+expensive, and this gate fails fast.
+
+1. Read the spec frontmatter. `last_review_status` must equal `clean`. If it is missing, set
+   to `findings`, or absent entirely, stop and tell the user to run `/fw:review` first.
+
+2. Cheap path — if all three hold, evidence is current and you can skip the hash recompute:
+   - `last_review_worktree: clean`
+   - the current worktree is clean (`test -z "$(git status --porcelain)"`)
+   - `git rev-parse HEAD` equals `last_review_head`
+
+3. Otherwise, recompute the hash using the **recorded** base (not a freshly derived one — the
+   remote default branch may have moved since review):
+   ```bash
+   bash "${CLAUDE_PLUGIN_ROOT}/scripts/review-evidence-hash.sh" "<last_review_base>"
+   ```
+   If the digest equals `last_review_diff_hash`, evidence is current.
+
+4. If neither path confirms the evidence is current, **stop**. Tell the user the
+   implementation has changed since the last clean review and ask them to re-run
+   `/fw:review`. Do not re-evaluate acceptance criteria here — that is review's job, and
+   reimplementing it inside compound would create a second evaluator that drifts from the
+   first.
+
+Only proceed to Move 1 once the gate passes. This prevents `/fw:compound` from blessing
+work that changed after review.
 
 ---
 
@@ -95,7 +111,10 @@ assembles the results.
 
 ### Setup
 
-Run this Bash block first to compute the merge base and today's date:
+Use `last_review_base` from the spec frontmatter as `BASE` — that is the range the work was
+reviewed against, and the journey/code/overlap analysis must match it. Only if review
+metadata is absent (which means the verification gate above let the run continue without it,
+e.g. an explicitly authorised `ready → done` shortcut) do you re-derive:
 
 ```bash
 BASE=$(git merge-base origin/HEAD HEAD 2>/dev/null \

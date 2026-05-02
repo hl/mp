@@ -69,10 +69,13 @@ The brief is clear when you can answer all of these from what the user has said:
 
 If yes to all five, proceed directly:
 
-1. Search prior solution docs before drafting:
+1. Search prior solution docs before drafting. Pick 3–6 lowercase keywords from the brief
+   that name the **problem domain**, the **component or surface area**, and the **technique
+   or behaviour**. Skip purely structural words like "add", "create", "feature", "support".
+   OR-join them in a single regex:
    ```bash
    if test -d docs/solutions; then
-     rg -n "<domain keywords from the brief>|<component names>|<problem terms>" docs/solutions
+     rg -n -i 'csv|export|invoice|admin|authorization|streaming' docs/solutions
    fi
    ```
    Read any strong matches. Incorporate relevant prior conventions, known pitfalls, and

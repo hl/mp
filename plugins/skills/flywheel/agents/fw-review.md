@@ -110,27 +110,19 @@ changed files in full when needed to evaluate a criterion. Do not rely on the di
 behavioural questions — context matters.
 
 Compute an evidence hash after collecting the diff inputs. This lets `/fw:compound` detect
-whether the work changed after a clean review:
+whether the work changed after a clean review. Use the shipped script so the digest is
+byte-exact comparable across runs and across agents:
 
 ```bash
-{
-  git diff "$BASE"...HEAD
-  git diff --cached
-  git diff
-  git ls-files --others --exclude-standard | while IFS= read -r f; do
-    printf '\n--- untracked: %s ---\n' "$f"
-    test -f "$f" && cat "$f"
-  done
-} | shasum -a 256
-```
-
-Also record:
-
-```bash
+DIFF_HASH=$(bash "${CLAUDE_PLUGIN_ROOT}/scripts/review-evidence-hash.sh" "$BASE")
 TODAY=$(date +%Y-%m-%d)
 HEAD_SHA=$(git rev-parse HEAD 2>/dev/null || echo unknown)
 WORKTREE_STATE=$(test -z "$(git status --porcelain)" && echo clean || echo dirty)
 ```
+
+Do not inline an alternative hash pipeline — `/fw:compound` recomputes via the same script,
+and any byte-level deviation (separator strings, untracked file ordering, trailing newlines)
+will produce a different digest.
 
 ---
 
