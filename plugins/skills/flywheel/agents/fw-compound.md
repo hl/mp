@@ -70,6 +70,21 @@ it), do not compound at all — even if the status would otherwise allow it. Com
 pollutes the knowledge store. The bar is: would a future agent benefit from finding this six
 months from now?
 
+Before writing any solution doc, verify the review evidence:
+
+1. The spec frontmatter must contain `last_review_status: clean`.
+2. Recompute the current review evidence hash using the same inputs as `/fw:review`
+   (`git diff $BASE...HEAD`, `git diff --cached`, `git diff`, and readable untracked file
+   content) and compare it to `last_review_diff_hash`.
+3. If the hash differs, or if review metadata is absent, run a local final acceptance gate:
+   evaluate every acceptance criterion against the current committed, staged, unstaged, and
+   untracked changes. If any criterion is partial/unsatisfied, or any unexpected behaviour or
+   scope creep appears, stop and return those findings instead of compounding.
+4. If the local final acceptance gate passes, continue and update the review metadata while
+   setting the spec to `done` at the end.
+
+This prevents `/fw:compound` from blessing work that changed after review.
+
 ---
 
 ## Move 1 — Capture the solution (parallel)
@@ -97,6 +112,17 @@ Then locate the spec. If the user passed an explicit spec path
 `status: in-progress` fallback, then ask if ambiguous.
 
 Note both `BASE` and the spec path; you'll pass them into each sub-agent prompt.
+
+Collect the same evidence inputs used by `/fw:review`:
+
+- committed branch diff: `git diff $BASE...HEAD`
+- staged diff: `git diff --cached`
+- unstaged diff: `git diff`
+- untracked file names and readable contents
+- changed file union from committed, staged, unstaged, and untracked files
+
+Use these inputs for capture. Do not compound only committed changes when the worktree is
+dirty.
 
 ### Dispatch three sub-agents in parallel
 
@@ -141,7 +167,11 @@ Return text only. Do not write files.
 ```
 Thoroughness: medium-high (read full files for substantive changes).
 
-Determine the changed files via: git diff --name-only <BASE>...HEAD
+Determine the changed files via the union of:
+- git diff --name-only <BASE>...HEAD
+- git diff --name-only --cached
+- git diff --name-only
+- git ls-files --others --exclude-standard
 
 Skip lockfile updates (package-lock.json, yarn.lock, Gemfile.lock, etc.), generated files,
 and pure-formatting changes. Focus on substantive changes.

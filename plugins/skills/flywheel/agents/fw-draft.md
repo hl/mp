@@ -69,15 +69,26 @@ The brief is clear when you can answer all of these from what the user has said:
 
 If yes to all five, proceed directly:
 
-1. Load the `fw-template` skill by running this Bash command, then read its output
+1. Search prior solution docs before drafting:
+   ```bash
+   if test -d docs/solutions; then
+     rg -n "<domain keywords from the brief>|<component names>|<problem terms>" docs/solutions
+   fi
+   ```
+   Read any strong matches. Incorporate relevant prior conventions, known pitfalls, and
+   reusable patterns into the spec's context, goals, or acceptance criteria. If no relevant
+   docs exist, continue normally. This step is what makes the knowledge store useful on the
+   next feature, not just after the last one.
+2. Load the `fw-template` skill by running this Bash command, then read its output
    as the skill content:
    ```bash
    cat "${CLAUDE_PLUGIN_ROOT}/skills/fw-template/SKILL.md"
    ```
-2. Write the spec to `docs/specs/<kebab-case-feature-name>.md`. Create `docs/specs/` if it
+3. Write the spec to `docs/specs/<kebab-case-feature-name>.md`. Create `docs/specs/` if it
    does not exist (`mkdir -p docs/specs` via Bash).
-3. Set `status: draft` in the frontmatter.
-4. Confirm the filename and location to the user.
+4. Set `status: draft` in the frontmatter.
+5. Confirm the filename and location to the user. If prior solution docs informed the spec,
+   list the paths used.
 
 ---
 
@@ -90,8 +101,8 @@ If you cannot answer all five questions from the brief, the brief is fuzzy. Do n
    cat "${CLAUDE_PLUGIN_ROOT}/skills/fw-brainstorm-approach/SKILL.md"
    ```
 2. Conduct the discovery conversation following the question order and rules in that skill.
-3. Once the threshold for "enough information" is met, load the `fw-template` skill
-   (same pattern, different path) and write the spec as in Path A.
+3. Once the threshold for "enough information" is met, search prior solution docs and load
+   the `fw-template` skill (same pattern, different path), then write the spec as in Path A.
 
 Do not write the spec while the brainstorm is incomplete. If the user wants to skip ahead,
 record the unresolved items in the spec's `open questions` section so `fw-validate`

@@ -60,6 +60,16 @@ Load the `fw-template` skill via Bash, then read its output as the canonical for
 cat "${CLAUDE_PLUGIN_ROOT}/skills/fw-template/SKILL.md"
 ```
 
+Read the spec's frontmatter before checking content:
+
+- `draft` → normal validation.
+- `ready` → revalidate content, but do not rewrite status unless the content now fails.
+- `in-progress` → validate only if the user explicitly asks for it; report that changes may
+  affect active implementation and do not change status.
+- `done` → do not validate as a pre-implementation spec. Tell the user to create a follow-up
+  spec or use `/fw:refresh` for stale solution docs.
+- Missing or unknown status → flag it as a validation finding.
+
 Then check the spec against these criteria:
 
 ### Acceptance criteria
@@ -106,7 +116,9 @@ choice is itself a constraint with a documented reason.
 
 ### If the spec passes all checks
 
-- Update the spec's `status` from `draft` to `ready` (use `Edit`).
+- Update the spec's `status` from `draft` to `ready` (use `Edit`). If the spec was already
+  `ready`, leave it unchanged and report that it still passes. If the spec was `in-progress`
+  and the user explicitly requested validation, leave status unchanged.
 - Confirm to the user: spec is ready for implementation. Suggest next step: `/plan`.
 
 ### If the spec has issues

@@ -32,6 +32,15 @@ The per-feature loop with status transitions:
 The `/plan ↔ /fw:review` cycle repeats until `/fw:review` returns no outstanding
 findings, then `/fw:compound` writes the learning.
 
+Operational safeguards:
+
+- `/fw:draft` searches relevant `docs/solutions/` entries before writing a new spec so prior
+  decisions influence the next unit of work.
+- `/fw:review` evaluates committed, staged, unstaged, and untracked changes, then records a
+  clean/finding result plus an evidence hash in the spec frontmatter.
+- `/fw:compound` verifies that clean review evidence is still current, or runs a local final
+  acceptance gate before writing solution docs.
+
 ## Commands
 
 | Command | What it does |

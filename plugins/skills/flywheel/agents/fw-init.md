@@ -103,11 +103,12 @@ This project uses the flywheel plugin. The per-feature loop:
 
 - `/fw:draft` — write a spec to `docs/specs/<feature>.md` before non-trivial work. The
   spec defines context, goals, falsifiable acceptance criteria, out-of-scope items, and
-  open questions.
+  open questions. It should search relevant `docs/solutions/` entries before drafting.
 - `/fw:validate` — validate the spec; advances `draft → ready`.
 - `/plan` (Claude native) — plan and execute.
 - `/fw:review` — check the implementation against the spec. Returns findings; advances
-  `ready → in-progress`. Iterate with `/plan` until findings are clean.
+  `ready → in-progress`. It records clean/finding review metadata and an evidence hash so
+  later steps can detect changed work. Iterate with `/plan` until findings are clean.
 - `/fw:compound` — capture the learning to `docs/solutions/<category>/`. Advances
   `in-progress → done`.
 

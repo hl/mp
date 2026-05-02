@@ -97,11 +97,40 @@ commit, treat all uncommitted changes as the diff to evaluate.
 Then gather the changes:
 
 - `git diff $BASE...HEAD` — the full diff of the current branch against its base.
-- `git status` — uncommitted changes.
+- `git diff --cached` — staged but uncommitted changes.
+- `git diff` — unstaged changes.
+- `git status --short` — untracked and changed files.
 - `git diff --name-only $BASE...HEAD` — the set of files changed.
+- `git diff --name-only --cached` — staged file names.
+- `git diff --name-only` — unstaged file names.
+- `git ls-files --others --exclude-standard` — untracked file names.
 
-Read changed files in full when needed to evaluate a criterion. Do not rely on the diff alone
-for behavioural questions — context matters.
+The changed file set is the union of committed, staged, unstaged, and untracked files. Read
+changed files in full when needed to evaluate a criterion. Do not rely on the diff alone for
+behavioural questions — context matters.
+
+Compute an evidence hash after collecting the diff inputs. This lets `/fw:compound` detect
+whether the work changed after a clean review:
+
+```bash
+{
+  git diff "$BASE"...HEAD
+  git diff --cached
+  git diff
+  git ls-files --others --exclude-standard | while IFS= read -r f; do
+    printf '\n--- untracked: %s ---\n' "$f"
+    test -f "$f" && cat "$f"
+  done
+} | shasum -a 256
+```
+
+Also record:
+
+```bash
+TODAY=$(date +%Y-%m-%d)
+HEAD_SHA=$(git rev-parse HEAD 2>/dev/null || echo unknown)
+WORKTREE_STATE=$(test -z "$(git status --porcelain)" && echo clean || echo dirty)
+```
 
 ---
 
@@ -152,6 +181,21 @@ For each:
 
 If all criteria are satisfied and no unexpected behaviour is found, say so explicitly and
 suggest `/fw:compound` as the next step.
+
+After producing the report, update only review metadata in the spec frontmatter:
+
+```yaml
+last_review_status: clean        # or: findings
+last_reviewed_at: <YYYY-MM-DD>
+last_review_base: <BASE>
+last_review_head: <HEAD_SHA>
+last_review_worktree: clean      # or: dirty
+last_review_diff_hash: <sha256>
+```
+
+Set `last_review_status: clean` only when every acceptance criterion is satisfied and there
+is no unexpected behaviour or scope creep. Set it to `findings` otherwise. Preserve all
+non-review frontmatter and body content.
 
 ---
 
